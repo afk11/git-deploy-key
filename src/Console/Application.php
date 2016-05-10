@@ -3,6 +3,7 @@
 namespace DeployKey\Console;
 
 use DeployKey\Console\Command\CreateCommand;
+use DeployKey\Console\Command\ListCurvesCommand;
 use Mdanter\Ecc\Console\Commands\DumpAsnCommand;
 
 class Application extends \Symfony\Component\Console\Application
@@ -15,6 +16,7 @@ class Application extends \Symfony\Component\Console\Application
     {
         $commands = parent::getDefaultCommands();
         $commands[] = new CreateCommand();
+        $commands[] = new ListCurvesCommand();
         return $commands;
     }
 }

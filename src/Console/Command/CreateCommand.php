@@ -2,12 +2,14 @@
 
 namespace DeployKey\Console\Command;
 
+use DeployKey\Curves;
 use DeployKey\Serializer\EncryptedPrivateKeySerializer;
 use DeployKey\Serializer\SshPublicKeySerializer;
 use DeployKey\SshStorage;
 use Mdanter\Ecc\Curves\CurveFactory;
 use Mdanter\Ecc\Curves\NamedCurveFp;
 use Mdanter\Ecc\EccFactory;
+use Mdanter\Ecc\Primitives\GeneratorPoint;
 use Mdanter\Ecc\Serializer\Point\UncompressedPointSerializer;
 use Mdanter\Ecc\Serializer\PrivateKey\DerPrivateKeySerializer;
 use Mdanter\Ecc\Serializer\PrivateKey\PemPrivateKeySerializer;
@@ -30,7 +32,7 @@ class CreateCommand extends Command
             ->addArgument('url', InputArgument::REQUIRED, 'Git repository url')
             ->addArgument('name', InputArgument::OPTIONAL, 'Assign an SSH nickname', null)
             ->addOption('no-password', null, InputOption::VALUE_NONE, "Don't encrypt the key")
-            ->addOption('ec-curve', null, InputOption::VALUE_OPTIONAL, 'Elliptic curve', 'nist-p256')
+            ->addOption('ec-curve', null, InputOption::VALUE_OPTIONAL, 'Elliptic curve', 'nistp256')
             ->addOption('ssh-dir', null, InputOption::VALUE_OPTIONAL, 'SSH directory', getenv('HOME') . "/.ssh")
             ->addOption('ssh-port',null,  InputOption::VALUE_OPTIONAL, 'SSH port', 22)
         ;
@@ -215,12 +217,10 @@ IdentityFile $keyPath\n";
             throw new \InvalidArgumentException('useEncryption parameter must be a boolean');
         }
 
-        if (!$this->checkCurveSupported($curveName)) {
-            throw new \RuntimeException('Unsupported curve');
-        }
-
-        $curve = CurveFactory::getCurveByName($curveName);
-        $generator = CurveFactory::getGeneratorByName($curveName);
+        /**
+         * @var GeneratorPoint $generator
+         */
+        list (, $generator) = Curves::load($curveName);
         $key = $generator->createPrivateKey();
 
         if ($useEncryption) {
@@ -235,15 +235,14 @@ IdentityFile $keyPath\n";
             $keyData = $serializer->serialize($key);
         }
 
-        $canonicalCurve = $this->getCanonicalCurveName($curve);
         $publicKey = $key->getPublicKey();
         $publicSerializer = new SshPublicKeySerializer(new UncompressedPointSerializer(EccFactory::getAdapter()));
-        $publicData = $publicSerializer->serialize($canonicalCurve, $publicKey);
+        $publicData = $publicSerializer->serialize($curveName, $publicKey);
 
         $localUser = posix_getpwuid(posix_geteuid());
         $localHost = gethostname();
 
-        $publicData = sprintf("ecdsa-sha2-%s %s %s@%s\n", $canonicalCurve, $publicData, $localUser['name'], $localHost);
+        $publicData = sprintf("ecdsa-sha2-%s %s %s@%s\n", $curveName, $publicData, $localUser['name'], $localHost);
 
         return [$keyData, $publicData];
     }

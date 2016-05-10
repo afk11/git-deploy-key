@@ -4,6 +4,7 @@
   "description": "Utility to manage multiple git deploy keys",
   "keywords": ["ssh","git","github","deploy", "ecdsa", "phpecc"],
   "license": "Unlicense",
+  "bin": ["bin/git-deploy-key"],
   "authors": [	
     {
       "name": "Thomas Kerin",

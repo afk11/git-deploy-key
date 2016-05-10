@@ -77,8 +77,8 @@ class KeyStorage
     {
         $privPath = $this->path($fileName);
         $pubPath = $privPath . ".pub";
-        $privateFd = fopen($privPath, "w");
-        $publicFd = fopen($pubPath, "w");
+        $privateFd = fopen($privPath, "a");
+        $publicFd = fopen($pubPath, "a");
 
         if ($privateFd === false || $publicFd === false) {
             throw new \RuntimeException('Unable to create key file');

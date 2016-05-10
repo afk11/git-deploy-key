@@ -114,11 +114,11 @@ class CreateCommand extends Command
      */
     public function createConfigEntry($sshHost, $hostname, $user, $port, $keyPath)
     {
-        return "Host $sshHost
+        return "\nHost $sshHost
 Hostname $hostname
 User $user
 Port $port
-IdentityFile $keyPath\n\n";
+IdentityFile $keyPath\n";
     }
 
     /**
@@ -174,8 +174,7 @@ IdentityFile $keyPath\n\n";
         $question->setMaxAttempts(1);
 
         $secondPassword = $questionHelper->ask($input, $output, $question);
-        var_dump($secondPassword);
-        var_dump(trim($secondPassword));
+
         return $secondPassword;
     }
 
@@ -290,13 +289,12 @@ IdentityFile $keyPath\n\n";
 
         $privateKeyPath = sprintf("%s/gitdeploy/%s", $sshDir, $sshHost);
         $publicKeyPath = $privateKeyPath . ".pub";
-        $output->writeln('<info>Confirm details: </info>');
-        $output->writeln('Private key file: ' . $privateKeyPath);
-        $output->writeln('Public key file: ' . $publicKeyPath);
-
-        $output->writeln("The following config entry will be written: ");
+        $output->writeln("<info>Confirm details: </info>\n");
+        $output->writeln('    Private key file: ' . $privateKeyPath);
+        $output->writeln('    Public key file: ' . $publicKeyPath . PHP_EOL);
+        $output->writeln("The following config entry will be written:");
         $configText = $this->createConfigEntry($sshHost, $host, $user, $sshPort, $privateKeyPath);
-        $output->write($configText);
+        $output->writeln($configText);
 
         $questionHelper = new QuestionHelper();
         if ($this->promptWhetherToProceed($input, $output, $questionHelper)) {
@@ -306,8 +304,15 @@ IdentityFile $keyPath\n\n";
 
             $sshStorage->commit($configText);
             $keyStorage->commit($sshHost, $privateData, $publicData);
-            
-            $output->writeln("Saved key to disk");
+
+            if ($host === 'github.com') {
+                $repo = substr($path, -4) === '.git' ? substr($path, 0, -4) : $path;
+                $output->writeln("You're using Github! You can paste the key in here: https://github.com/" . $repo . "/settings/keys");
+                $output->writeln("{$publicData}");
+            }
+
+            $output->writeln("<info>Saved key to disk</info>");
+
         } else {
             $output->writeln("No changes made");
         }

@@ -52,7 +52,7 @@ class SshStorage
     {
         $path = $this->path('config');
         if (file_exists($path) && is_file($path)) {
-            $fd = fopen($path, "w");
+            $fd = fopen($path, "a");
             if ($fd) {
                 fclose($fd);
                 return true;

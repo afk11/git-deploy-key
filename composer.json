@@ -3,14 +3,14 @@
   "type": "application",
   "description": "Utility to manage multiple git deploy keys",
   "keywords": ["ssh","git","github","deploy", "ecdsa", "phpecc"],
-  "licence": "Unlicense",
+  "license": "Unlicense",
   "authors": [	
     {
       "name": "Thomas Kerin",
       "email": "me@thomaskerin.io",
       "role": "Developer"
     }
-  ]
+  ],
   "require": {
     "mdanter/ecc": "~0.3",
     "paragonie/random_compat": "^2.0"

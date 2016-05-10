@@ -76,7 +76,7 @@ and repository. Custom names can be given by providing a second argument.
 The `--no-password` option can be set to disable encryption of the key. 
 This can be useful during automated deployments with scheduled updates.
  
-    user@dev:~$ bin/git-deploy-key create git@github.com:Bit-Wasp/bitcoin-p2p-php --no-password
+    user@dev:~$ git-deploy-key create git@github.com:Bit-Wasp/bitcoin-p2p-php --no-password
     Confirm details: 
     
         Private key file: /home/user/.ssh/gitdeploy/github-Bit-Wasp-bitcoin-p2p-php

@@ -46,6 +46,7 @@ Update your $PATH to include ~/.composer/vendor/bin:
 ### Create a password protected SSH key: 
 
 Creating the key: 
+
     user@dev:~$ git-deploy-key create git@github.com:Bit-Wasp/bitcoin-php
     Confirm details: 
         [output trimmed] 
@@ -58,6 +59,7 @@ Creating the key:
     Saved key to disk
     
 Cloning the project: 
+
     user@dev:~/git$ git clone github-Bit-Wasp-bitcoin-php:Bit-Wasp/bitcoin-php 
     Cloning into 'bitcoin-php'...
     Enter passphrase for key '/home/user/.ssh/gitdeploy/github-Bit-Wasp-bitcoin-php': 

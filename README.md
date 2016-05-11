@@ -32,7 +32,7 @@ The tool supports unencrypted keys by setting the --no-password option.
 ## Usage
 
 ### Install the tool: 
-
+ 
 This tool is available through composer. The following command will save
 the application to the global composer directory (~/.composer)
 
@@ -46,6 +46,8 @@ Update your $PATH to include ~/.composer/vendor/bin:
 At this point you can use the tool anywhere:
  
     git-deploy-key help
+
+You can also checkout this repository and access the executable in `bin/` directory after running `composer install`
 
 ### Create a password protected SSH key: 
 

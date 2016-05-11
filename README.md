@@ -43,6 +43,10 @@ Update your $PATH to include ~/.composer/vendor/bin:
     echo "export PATH=~/.composer/vendor/bin:\$PATH" >> ~/.bashrc
     source ~/.bashrc # this is done automatically when you log in
 
+At this point you can use the tool anywhere:
+ 
+    git-deploy-key help
+
 ### Create a password protected SSH key: 
 
 Creating the key: 

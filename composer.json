@@ -14,7 +14,7 @@
   ],
   "require": {
     "afk11/ecssh": "~0.1",
-    "paragonie/random_compat": "~2.0",
+    "paragonie/random_compat": "~2.0"
   },
   "autoload": {
     "psr-4": {

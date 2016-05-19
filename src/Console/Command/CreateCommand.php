@@ -1,11 +1,12 @@
 <?php
 
-namespace DeployKey\Console\Command;
+namespace Afk11\DeployKey\Console\Command;
 
-use DeployKey\Curves;
-use DeployKey\Serializer\EncryptedPrivateKeySerializer;
-use DeployKey\Serializer\SshPublicKeySerializer;
-use DeployKey\SshStorage;
+use Afk11\DeployKey\SshStorage;
+use Afk11\EcSSH\Curves;
+use Afk11\EcSSH\EncryptedPrivateKey;
+use Afk11\EcSSH\Serializer\EncryptedPrivateKeySerializer;
+use Afk11\EcSSH\Serializer\SshPublicKeySerializer;
 use Mdanter\Ecc\Curves\CurveFactory;
 use Mdanter\Ecc\Curves\NamedCurveFp;
 use Mdanter\Ecc\EccFactory;
@@ -225,18 +226,17 @@ IdentityFile $keyPath\n";
 
         if ($useEncryption) {
             $password = $this->promptForPassword($input, $output, $helper);
-            $method = 'AES-128-CBC';
-            $iv = random_bytes(16);
-
+            $encrypted = new EncryptedPrivateKey($key, 'AES-128-CBC', random_bytes(16));
             $serializer = new EncryptedPrivateKeySerializer(new DerPrivateKeySerializer());
-            $keyData = $serializer->serialize($key, $password, $method, $iv);
+            $keyData = $serializer->serialize($encrypted, $password);
         } else {
             $serializer = new PemPrivateKeySerializer(new DerPrivateKeySerializer());
             $keyData = $serializer->serialize($key);
         }
 
+        $adapter = EccFactory::getAdapter();
         $publicKey = $key->getPublicKey();
-        $publicSerializer = new SshPublicKeySerializer(new UncompressedPointSerializer(EccFactory::getAdapter()));
+        $publicSerializer = new SshPublicKeySerializer($adapter, new UncompressedPointSerializer($adapter));
         $publicData = $publicSerializer->serialize($curveName, $publicKey);
 
         $localUser = posix_getpwuid(posix_geteuid());
@@ -304,16 +304,23 @@ IdentityFile $keyPath\n";
             $sshStorage->commit($configText);
             $keyStorage->commit($sshHost, $privateData, $publicData);
 
+            $output->writeln('');
             if ($host === 'github.com') {
                 $repo = substr($path, -4) === '.git' ? substr($path, 0, -4) : $path;
                 $output->writeln("You're using Github! You can paste the key in here: https://github.com/" . $repo . "/settings/keys");
-                $output->writeln("{$publicData}");
+            } else {
+                $output->writeln("Your key has been created. Please inform the remote git server of your public key");
             }
+            $output->writeln("  <info>{$publicData}</info>");
 
-            $output->writeln("<info>Saved key to disk</info>");
+            $output->writeln("Access your repository: ");
+            $output->writeln("  git clone {$sshHost}:{$path} ");
+
+            $output->writeln("\n<info>Saved key to disk</info>");
 
         } else {
             $output->writeln("No changes made");
         }
     }
 }
+ 

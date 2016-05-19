@@ -1,10 +1,9 @@
 <?php
 
-namespace DeployKey\Console;
+namespace Afk11\DeployKey\Console;
 
-use DeployKey\Console\Command\CreateCommand;
-use DeployKey\Console\Command\ListCurvesCommand;
-use Mdanter\Ecc\Console\Commands\DumpAsnCommand;
+use Afk11\DeployKey\Console\Command\CreateCommand;
+use Afk11\DeployKey\Console\Command\ListCurvesCommand;
 
 class Application extends \Symfony\Component\Console\Application
 {

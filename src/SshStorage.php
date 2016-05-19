@@ -1,6 +1,6 @@
 <?php
 
-namespace DeployKey;
+namespace Afk11\DeployKey;
 
 
 class SshStorage

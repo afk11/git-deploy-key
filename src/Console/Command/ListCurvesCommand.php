@@ -1,8 +1,8 @@
 <?php
 
-namespace DeployKey\Console\Command;
+namespace Afk11\DeployKey\Console\Command;
 
-use DeployKey\Curves;
+use Afk11\EcSSH\Curves;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

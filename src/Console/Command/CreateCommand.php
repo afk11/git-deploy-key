@@ -315,6 +315,8 @@ IdentityFile $keyPath\n";
 
             $output->writeln("Access your repository: ");
             $output->writeln("  git clone {$sshHost}:{$path} ");
+            $output->writeln("Add this remote: ");
+            $output->writeln("  git remote add origin {$sshHost}:{$path}");
 
             $output->writeln("\n<info>Saved key to disk</info>");
 

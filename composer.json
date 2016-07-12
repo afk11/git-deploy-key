@@ -14,6 +14,7 @@
   ],
   "require": {
     "afk11/ecssh": "~0.1",
+    "symfony/console": "v3.0.*",
     "paragonie/random_compat": "~2.0"
   },
   "autoload": {
